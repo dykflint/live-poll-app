@@ -1,0 +1,48 @@
+// Prisma schema – single source of truth for the database structure.
+// `prisma generate` turns this into a typed TypeScript client.
+// `prisma migrate dev` turns this into SQLite DDL and applies it.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  // DATABASE_URL must be set in the environment (see .env.example).
+  // For local development: "file:./dev.db"
+  url      = env("DATABASE_URL")
+}
+
+// A poll is the top-level entity.  It owns its options and is the anchor
+// for every shareable URL (/poll/:id and /results/:id).
+model Poll {
+  id        String   @id @default(cuid())
+  question  String
+  createdAt DateTime @default(now())
+
+  options Option[]
+}
+
+// One row per answer choice.  Belongs to exactly one poll.
+// The cascade delete on the relation ensures orphaned options are cleaned
+// up automatically if a poll is ever removed.
+model Option {
+  id     String @id @default(cuid())
+  text   String
+  pollId String
+
+  poll  Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes Vote[]
+}
+
+// A single anonymous vote for one option.
+// Storing individual vote rows (instead of a running counter) keeps the
+// history intact and makes percentage calculations trivially correct —
+// see ADR-005.
+model Vote {
+  id        String   @id @default(cuid())
+  optionId  String
+  createdAt DateTime @default(now())
+
+  option Option @relation(fields: [optionId], references: [id], onDelete: Cascade)
+}
