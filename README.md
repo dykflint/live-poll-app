@@ -10,6 +10,13 @@ AI tools were used to:
 - Review architecture decisions
 
 All generated code was reviewed, modified, and tested manually.
+
+---
+
+**Live demo: https://live-poll-app-six.vercel.app**
+
+---
+
 A real-time polling application: create a poll, share the link, collect votes, and watch the results update live.
 
 ## Features
