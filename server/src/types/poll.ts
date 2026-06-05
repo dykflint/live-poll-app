@@ -16,3 +16,15 @@ export interface PollResponse {
 export interface CreatePollResponse {
   id: string;
 }
+
+export interface OptionResult {
+  optionId: string;
+  text: string;
+  votes: number;
+  percentage: number;
+}
+
+export interface ResultsResponse {
+  totalVotes: number;
+  results: OptionResult[];
+}
