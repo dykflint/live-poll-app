@@ -9,9 +9,11 @@ const config: Config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  // Avoid importing the real Prisma client in unit tests
-  // (integration tests wire it up via a real dev DB)
   clearMocks: true,
+  // Runs once before all suites: applies Prisma migrations to test.db
+  globalSetup: "<rootDir>/src/test/globalSetup.ts",
+  // Runs inside each worker before module loading: sets DATABASE_URL for test.db
+  setupFiles: ["<rootDir>/src/test/envSetup.ts"],
 };
 
 export default config;
